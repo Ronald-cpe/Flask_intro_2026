@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculate a circle's area from its radius.">
+    <title>Circle Area | Ronald's Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-label="Ronald's Website">Ronald's Website</a>
+        <nav aria-label="Main navigation">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link active" href="/works" aria-current="page">Works</a>
+            <a class="nav-contact" href="/contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="calculator-main">
+        <div class="calculator-layout">
+            <section class="calculator-intro" aria-labelledby="calculator-title">
+                <p class="eyebrow"><span class="status-dot"></span> BSCpE / GEOMETRY TOOL 02</p>
+                <h1 id="calculator-title">Circle<br><em>area.</em></h1>
+                <p>Enter the radius to calculate the area enclosed by a circle.</p>
+                <div class="formula-display" aria-label="Area equals pi times radius squared">
+                    <span>A = πr²</span>
+                </div>
+            </section>
+
+            <section class="calculator-card" aria-label="Circle area calculator">
+                <p class="calculator-card-label">INPUT DIMENSIONS</p>
+                <form class="calculator-form" action="{{ url_for('acircle') }}" method="post">
+                    <label class="calculator-field" for="radius">
+                        <span>RADIUS</span>
+                        <span class="input-with-unit">
+                            <input id="radius" name="radius" type="number" min="0" step="any" value="{{ radius }}" placeholder="e.g. 5" required>
+                            <span>units</span>
+                        </span>
+                    </label>
+                    <button class="calculator-button" type="submit">Calculate area <span aria-hidden="true">→</span></button>
+                </form>
+
+                {% if error %}
+                <p class="calculator-error" role="alert">{{ error }}</p>
+                {% endif %}
+
+                {% if result is not none %}
+                <div class="calculator-result" aria-live="polite">
+                    <span>CIRCLE AREA</span>
+                    <strong>{{ "%.2f"|format(result) }} <small>square units</small></strong>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <a class="footer-wordmark" href="/">Ronald's Website</a>
+        <p>Built while learning, one project at a time.</p>
+        <a href="/contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </footer>
+</body>
+</html>

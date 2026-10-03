@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse Ronald's programming and geometry tools.">
+    <title>Works | Ronald's Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-label="Ronald's Website">Ronald's Website</a>
+        <nav aria-label="Main navigation">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link active" href="/works" aria-current="page">Works</a>
+            <a class="nav-contact" href="/contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="works-main">
+        <section class="projects" aria-labelledby="works-title">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow section-eyebrow">SOFTWARE / SYSTEMS / ENGINEERING</p>
+                    <h1 id="works-title">All works<span>.</span></h1>
+                </div>
+                <span class="all-works">03 TOOLS</span>
+            </div>
+
+            <div class="project-list">
+                <a class="project-item project-uppercase" href="/works/uppercase">
+                    <div class="project-art" aria-hidden="true">
+                        <span class="art-label">TEXT TOOL / 01</span>
+                        <span class="uppercase-art">Aa<span>→</span>AA</span>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-number">01</span>
+                        <div>
+                            <h2>Uppercase converter</h2>
+                            <p>Transform text to uppercase.</p>
+                        </div>
+                        <span class="project-arrow" aria-hidden="true">↗</span>
+                    </div>
+                </a>
+
+                <a class="project-item project-circle" href="/works/area/circle">
+                    <div class="project-art" aria-hidden="true">
+                        <span class="art-label">GEOMETRY TOOL / 02</span>
+                        <span class="circle-art"><span>πr²</span></span>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-number">02</span>
+                        <div>
+                            <h2>Circle area calculator</h2>
+                            <p>Find the area from a radius.</p>
+                        </div>
+                        <span class="project-arrow" aria-hidden="true">↗</span>
+                    </div>
+                </a>
+
+                <a class="project-item project-triangle" href="/works/area/triangle">
+                    <div class="project-art" aria-hidden="true">
+                        <span class="art-label">GEOMETRY TOOL / 03</span>
+                        <span class="triangle-art"><span>b × h / 2</span></span>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-number">03</span>
+                        <div>
+                            <h2>Triangle area calculator</h2>
+                            <p>Calculate area from base and height.</p>
+                        </div>
+                        <span class="project-arrow" aria-hidden="true">↗</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <a class="footer-wordmark" href="/">Ronald's Website</a>
+        <p>Built while learning, one project at a time.</p>
+        <a href="/contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </footer>
+</body>
+</html>

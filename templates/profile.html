@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Profile of Ronald B. Dotillos Jr., a Computer Engineering student.">
+    <title>Profile | Ronald's Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-label="Ronald's Website">Ronald's Website</a>
+        <nav aria-label="Main navigation">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link active" href="/profile" aria-current="page">Profile</a>
+            <a class="nav-link" href="/works">Works</a>
+            <a class="nav-contact" href="/contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <section class="profile-intro" aria-labelledby="profile-title">
+            <p class="eyebrow"><span class="status-dot"></span> BSCpE / STUDENT PROFILE</p>
+            <h1 id="profile-title">Ronald B.<br><em>Dotillos Jr.</em></h1>
+            <p class="profile-copy">Computer Engineering student exploring how software and hardware work together.</p>
+            <div class="profile-motto">
+                <span class="motto-label">PERSONAL MOTTO</span>
+                <blockquote>“Learn from your mistakes.”</blockquote>
+            </div>
+        </section>
+
+        <section class="profile-data" aria-label="Student information">
+            <div class="profile-data-heading">
+                <span>PROFILE DATA</span>
+                <span class="profile-photo-frame">
+                    <img
+                        class="profile-photo"
+                        src="{{ url_for('static', filename='images/portrait.jpg') }}"
+                        alt="Photo of Ronald"
+                    >
+                </span>
+            </div>
+            <dl>
+                <div class="profile-row">
+                    <dt>NAME</dt>
+                    <dd>Ronald B. Dotillos Jr.</dd>
+                </div>
+                <div class="profile-row">
+                    <dt>SECTION</dt>
+                    <dd>BSCpE 2-3</dd>
+                </div>
+                <div class="profile-row">
+                    <dt>COURSE</dt>
+                    <dd>BS Computer Engineering</dd>
+                </div>
+                <div class="profile-row">
+                    <dt>SUBJECT</dt>
+                    <dd>Data Structures and Algorithms</dd>
+                </div>
+            </dl>
+            <a class="profile-work-link" href="/works">Explore my projects <span aria-hidden="true">↗</span></a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <a class="footer-wordmark" href="/">Ronald's Website</a>
+        <p>Built while learning, one project at a time.</p>
+        <a href="/contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </footer>
+</body>
+</html>

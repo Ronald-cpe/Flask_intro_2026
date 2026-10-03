@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    font-family: Georgia, serif;
+    background: #debb54;
+    color: #222;
+}
+
+nav ul {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    padding: 16px 32px;
+    background: #173f35;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    max-width: 900px;
+    margin: 48px auto;
+    padding: 0 24px;
+}
+
+.profile-data-heading {
+    align-items: center;
+}
+
+.profile-photo {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border: 1px solid var(--forest);
+}

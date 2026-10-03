@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Computer engineering projects, software tools, and practical experiments by Ronald.">
+    <title>Ronald's Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-label="Ronald's Website">
+            Ronald's Website
+        </a>
+        <nav aria-label="Main navigation">
+            <a class="nav-link active" href="/" aria-current="page">Home</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link" href="/works">Works</a>
+            <a class="nav-contact" href="/contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-content">
+                <p class="eyebrow"><span class="status-dot"></span> BSCpE / COMPUTER ENGINEERING</p>
+                <h1 id="hero-title">Building at the<br><em>hardware edge.</em></h1>
+                <p class="hero-copy">Exploring the space where code meets circuits, through practical tools and the projects I'm learning to build.</p>
+                <div class="hero-actions">
+                    <a class="button button-light" href="#projects">Explore the works <span aria-hidden="true">↓</span></a>
+                    <a class="text-link" href="/profile">About me <span aria-hidden="true">↗</span></a>
+                </div>
+            </div>
+            <p class="hero-caption"><span>01</span> LEARNING BY MAKING</p>
+        </section>
+
+        <section class="projects" id="projects" aria-labelledby="projects-title">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow section-eyebrow">SOFTWARE / SYSTEMS / ENGINEERING</p>
+                    <h2 id="projects-title">Projects in progress<span>.</span></h2>
+                </div>
+                <a class="all-works" href="/works">View all works <span aria-hidden="true">↗</span></a>
+            </div>
+
+            <div class="project-list">
+                <a class="project-item project-uppercase" href="/works/uppercase">
+                    <div class="project-art" aria-hidden="true">
+                        <span class="art-label">TEXT TOOL / 01</span>
+                        <span class="uppercase-art">Aa<span>→</span>AA</span>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-number">01</span>
+                        <div>
+                            <h3>Uppercase converter</h3>
+                            <p>A simple tool that transforms text in a click.</p>
+                        </div>
+                        <span class="project-arrow" aria-hidden="true">↗</span>
+                    </div>
+                </a>
+
+                <a class="project-item project-circle" href="/works/area/circle">
+                    <div class="project-art" aria-hidden="true">
+                        <span class="art-label">GEOMETRY TOOL / 02</span>
+                        <span class="circle-art"><span>πr²</span></span>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-number">02</span>
+                        <div>
+                            <h3>Circle area calculator</h3>
+                            <p>Find a circle's area from its radius.</p>
+                        </div>
+                        <span class="project-arrow" aria-hidden="true">↗</span>
+                    </div>
+                </a>
+
+                <a class="project-item project-triangle" href="/works/area/triangle">
+                    <div class="project-art" aria-hidden="true">
+                        <span class="art-label">GEOMETRY TOOL / 03</span>
+                        <span class="triangle-art"><span>b × h / 2</span></span>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-number">03</span>
+                        <div>
+                            <h3>Triangle area calculator</h3>
+                            <p>Calculate area from a base and height.</p>
+                        </div>
+                        <span class="project-arrow" aria-hidden="true">↗</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <a class="footer-wordmark" href="/">Ronald's Website</a>
+        <p>Built while learning, one project at a time.</p>
+        <a href="/contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </footer>
+</body>
+</html>
+
