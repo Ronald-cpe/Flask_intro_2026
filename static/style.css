@@ -417,6 +417,14 @@ a {
     background: linear-gradient(135deg, #102027, #132b30);
 }
 
+.project-stack .project-art {
+    background: linear-gradient(135deg, #1b1c2b, #202b35);
+}
+
+.project-postfix .project-art {
+    background: linear-gradient(135deg, #241c21, #182a30);
+}
+
 .project-art::before {
     position: absolute;
     inset: 0;
@@ -434,7 +442,9 @@ a {
 .works-main .uppercase-art,
 .works-main .circle-art,
 .works-main .triangle-art,
-.works-main .linklist-art {
+.works-main .linklist-art,
+.works-main .stack-art,
+.works-main .postfix-art {
     transition: transform .24s ease;
 }
 
@@ -451,7 +461,11 @@ a {
 .works-main .project-item:hover .triangle-art,
 .works-main .project-item:focus-visible .triangle-art,
 .works-main .project-item:hover .linklist-art,
-.works-main .project-item:focus-visible .linklist-art {
+.works-main .project-item:focus-visible .linklist-art,
+.works-main .project-item:hover .stack-art,
+.works-main .project-item:focus-visible .stack-art,
+.works-main .project-item:hover .postfix-art,
+.works-main .project-item:focus-visible .postfix-art {
     transform: translateY(-3px) scale(1.04);
 }
 
@@ -546,6 +560,47 @@ a {
 
 .linklist-art i {
     font-style: normal;
+}
+
+.stack-art {
+    width: 102px;
+    display: grid;
+    gap: 4px;
+    position: relative;
+    z-index: 1;
+    color: var(--forest);
+    font: 11px var(--mono);
+    text-align: center;
+}
+
+.stack-art > span {
+    padding-bottom: 2px;
+    color: var(--coral);
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.stack-art i {
+    padding: 6px;
+    border: 1px solid #3a7775;
+    background: #0e2227;
+    font-style: normal;
+}
+
+.postfix-art {
+    display: grid;
+    justify-items: center;
+    gap: 9px;
+    position: relative;
+    z-index: 1;
+    color: var(--forest);
+    font: 12px var(--mono);
+    white-space: nowrap;
+}
+
+.postfix-art span {
+    color: var(--coral);
+    font-size: 20px;
 }
 
 .project-info {
@@ -956,6 +1011,11 @@ a {
     font-size: 20px;
 }
 
+.stack-legend-arrow {
+    color: var(--coral);
+    font-size: 19px;
+}
+
 .linklist-back-link {
     display: inline-block;
     margin-top: 34px;
@@ -1018,6 +1078,341 @@ a {
     scrollbar-width: thin;
 }
 
+.stack-viewport {
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+    padding: 17px;
+    overflow-y: auto;
+    border: 1px solid #1e3439;
+    background: linear-gradient(135deg, rgba(8, 18, 22, .95), rgba(14, 31, 35, .88));
+    scrollbar-color: #35545a #0b1519;
+    scrollbar-width: thin;
+}
+
+.stack-items {
+    width: min(100%, 280px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+    margin: auto 0;
+}
+
+.stack-item {
+    min-height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 8px 13px;
+    border: 1px solid #3a7775;
+    background: linear-gradient(90deg, #10292d, #0e2227);
+    box-shadow: 0 0 18px rgba(85, 230, 210, .07);
+    animation: linklist-node-in .2s ease-out both;
+}
+
+.stack-item:first-child {
+    border-color: var(--coral);
+    box-shadow: 0 0 18px rgba(255, 147, 110, .09);
+}
+
+.stack-item-label {
+    color: #8da1a5;
+    font: 9px var(--mono);
+    letter-spacing: .8px;
+}
+
+.stack-item:first-child .stack-item-label {
+    color: var(--coral);
+}
+
+.stack-item-value {
+    color: var(--forest);
+    font: 600 16px var(--mono);
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+.stack-complexity {
+    align-self: center;
+    color: #829498;
+    font: 9px var(--mono);
+    letter-spacing: .4px;
+}
+
+.postfix-main {
+    min-height: calc(100vh - 156px);
+}
+
+.postfix-layout {
+    width: min(100%, 1120px);
+    display: grid;
+    grid-template-columns: minmax(240px, .68fr) minmax(0, 1.32fr);
+    align-items: start;
+    gap: 40px;
+}
+
+.postfix-rules {
+    display: grid;
+    gap: 14px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+    color: #aab9bc;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.postfix-rules li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+}
+
+.postfix-rules span {
+    color: var(--coral);
+    font: 10px var(--mono);
+}
+
+.postfix-card {
+    padding: 23px;
+}
+
+.postfix-heading,
+.postfix-machine-heading,
+.postfix-progress,
+.postfix-form-footer,
+.postfix-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.postfix-heading {
+    align-items: flex-start;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--line);
+}
+
+.postfix-heading .calculator-card-label {
+    margin: 0 0 6px;
+    padding: 0;
+    border: 0;
+}
+
+.postfix-subtitle,
+.postfix-expression-tag,
+.postfix-machine-heading > span,
+.postfix-step-count,
+.postfix-current-token {
+    margin: 0;
+    color: #91a5a8;
+    font: 9px var(--mono);
+    letter-spacing: .5px;
+}
+
+.postfix-expression-tag,
+.postfix-current-token {
+    color: var(--forest);
+}
+
+.postfix-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 17px;
+}
+
+.postfix-form-footer {
+    align-items: flex-start;
+}
+
+.postfix-hint {
+    margin: 0;
+    color: #829498;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.postfix-start-button,
+.postfix-next-button {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.postfix-error {
+    margin: 12px 0 0;
+    color: #ffad91;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.postfix-progress {
+    margin-top: 20px;
+}
+
+.postfix-progress-track {
+    height: 3px;
+    flex: 1;
+    overflow: hidden;
+    background: #203339;
+}
+
+.postfix-progress-track span {
+    height: 100%;
+    display: block;
+    background: var(--forest);
+    transition: width .2s ease;
+}
+
+.postfix-current-token {
+    min-width: 36px;
+    color: var(--coral);
+    text-align: right;
+}
+
+.postfix-explanation {
+    min-height: 48px;
+    margin: 12px 0;
+    padding: 12px 14px;
+    border-left: 2px solid var(--coral);
+    background: #101b20;
+    color: #c0ccce;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.postfix-machines {
+    display: grid;
+    grid-template-columns: minmax(120px, .72fr) minmax(0, 1.28fr);
+    gap: 12px;
+}
+
+.postfix-machine {
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #1e3439;
+    background: rgba(8, 18, 22, .62);
+}
+
+.postfix-machine-heading {
+    align-items: baseline;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #203339;
+}
+
+.postfix-machine-heading h2 {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.postfix-machine-heading > span {
+    font-size: 8px;
+}
+
+.postfix-stack-viewport {
+    min-height: 114px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 10px;
+}
+
+.postfix-stack,
+.postfix-output {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: center;
+    gap: 6px;
+}
+
+.postfix-stack {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.postfix-output {
+    min-height: 114px;
+    padding-top: 10px;
+}
+
+.postfix-token {
+    min-width: 27px;
+    display: inline-grid;
+    place-items: center;
+    padding: 6px 8px;
+    border: 1px solid #355158;
+    background: #122126;
+    color: var(--forest);
+    font: 11px var(--mono);
+    overflow-wrap: anywhere;
+}
+
+.postfix-token.is-top {
+    border-color: var(--coral);
+    color: var(--coral);
+}
+
+.postfix-token.is-new {
+    border-color: var(--forest);
+    background: #16332f;
+}
+
+.postfix-empty {
+    padding: 6px 0;
+    color: #607277;
+    font: 10px var(--mono);
+}
+
+.postfix-controls {
+    margin-top: 13px;
+}
+
+.postfix-controls .linklist-secondary-button {
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 10px;
+}
+
+.postfix-controls .postfix-next-button {
+    min-height: 38px;
+    padding: 0 13px;
+    font-size: 11px;
+}
+
+.postfix-controls .linklist-text-button {
+    min-height: 38px;
+}
+
+.postfix-controls button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.postfix-result {
+    display: grid;
+    gap: 7px;
+    margin: 14px 0 0;
+    padding: 12px 14px;
+    border: 1px solid #3a7775;
+    background: #10292d;
+}
+
+.postfix-result span {
+    color: #91a5a8;
+    font: 9px var(--mono);
+    letter-spacing: .8px;
+}
+
+.postfix-result strong {
+    color: var(--forest);
+    font: 600 17px var(--mono);
+    overflow-wrap: anywhere;
+}
+
 .linklist-chain {
     min-width: 100%;
     display: flex;
@@ -1033,6 +1428,16 @@ a {
     background: #0e2227;
     box-shadow: 0 0 18px rgba(85, 230, 210, .07);
     animation: linklist-node-in .2s ease-out both;
+}
+
+.linklist-node.is-search-match {
+    border-color: var(--coral);
+    background: #2b211f;
+    box-shadow: 0 0 22px rgba(255, 147, 110, .24);
+}
+
+.linklist-node.is-search-match .linklist-node-value {
+    color: var(--coral);
 }
 
 .linklist-node-value {
@@ -1114,6 +1519,31 @@ a {
     margin: 0;
 }
 
+.linklist-insert-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 10px;
+}
+
+.linklist-insert-controls .linklist-secondary-button {
+    min-width: 144px;
+}
+
+.linklist-search-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--line);
+}
+
+.linklist-search-form .linklist-secondary-button {
+    min-width: 125px;
+}
+
 .linklist-secondary-button,
 .linklist-text-button {
     min-height: 46px;
@@ -1137,6 +1567,7 @@ a {
 
 .linklist-footer-actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 12px;
     margin-top: 16px;
@@ -1159,6 +1590,7 @@ a {
     color: var(--forest);
 }
 
+.linklist-secondary-button:disabled,
 .linklist-text-button:disabled {
     color: #506065;
     cursor: not-allowed;
@@ -1490,6 +1922,15 @@ a {
         gap: 32px;
     }
 
+    .linklist-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .postfix-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
     .calculator-intro h1 {
         font-size: 46px;
     }
@@ -1510,6 +1951,18 @@ a {
     }
 }
 
+@media (max-width: 440px) {
+    .linklist-insert-controls,
+    .linklist-search-form {
+        grid-template-columns: 1fr;
+    }
+
+    .linklist-insert-controls .linklist-secondary-button,
+    .linklist-search-form .linklist-secondary-button {
+        width: 100%;
+    }
+}
+
 @media (max-width: 390px) {
     .wordmark {
         font-size: 13px;
@@ -1525,6 +1978,10 @@ a {
 
     .hero h1 {
         font-size: 42px;
+    }
+
+    .postfix-machines {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -1555,7 +2012,10 @@ a {
     .works-main .circle-art,
     .works-main .triangle-art,
     .works-main .linklist-art,
+    .works-main .stack-art,
+    .works-main .postfix-art,
     .linklist-node,
+    .stack-item,
     .works-main .project-arrow {
         transition: none;
         animation: none;
@@ -1573,6 +2033,10 @@ a {
     .works-main .project-item:focus-visible .triangle-art,
     .works-main .project-item:hover .linklist-art,
     .works-main .project-item:focus-visible .linklist-art,
+    .works-main .project-item:hover .stack-art,
+    .works-main .project-item:focus-visible .stack-art,
+    .works-main .project-item:hover .postfix-art,
+    .works-main .project-item:focus-visible .postfix-art,
     .works-main .project-item:hover .project-arrow,
     .works-main .project-item:focus-visible .project-arrow {
         transform: none;

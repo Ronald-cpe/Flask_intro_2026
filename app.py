@@ -20,6 +20,14 @@ def works():
 def linklist():
     return render_template('linkedlist.html')
 
+@app.route('/works/stack')
+def stack():
+    return render_template('stack.html')
+
+@app.route('/works/infix-postfix')
+def infix_postfix():
+    return render_template('in/postfix.html')
+
 @app.route('/works/uppercase', methods=['GET', 'POST'])
 def uppercase():
     result = None

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert infix expressions to postfix with a step-by-step Shunting Yard walkthrough.">
+    <title>Infix to Postfix | Ronald's Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-label="Ronald's Website">Ronald's Website</a>
+        <nav aria-label="Main navigation">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link active" href="/works" aria-current="page">Works</a>
+            <a class="nav-contact" href="/contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="calculator-main postfix-main">
+        <div class="postfix-layout">
+            <section class="calculator-intro" aria-labelledby="postfix-title">
+                <p class="eyebrow"><span class="status-dot"></span> BSCpE / DATA STRUCTURE 06</p>
+                <h1 id="postfix-title">Infix<br><em>to postfix.</em></h1>
+                <p>Follow each token as the Shunting Yard algorithm builds a postfix expression. Operators wait on a stack until their precedence says it is time to output them.</p>
+                <ol class="postfix-rules">
+                    <li><span>01</span> Send operands straight to output.</li>
+                    <li><span>02</span> Hold opening brackets on the operator stack.</li>
+                    <li><span>03</span> Pop higher or equal precedence operators first.</li>
+                    <li><span>04</span> Drain the operator stack at the end.</li>
+                </ol>
+                <a class="linklist-back-link" href="{{ url_for('works') }}">← Back to all works</a>
+            </section>
+
+            <section class="linklist-card postfix-card" aria-label="Infix to postfix walkthrough">
+                <div class="postfix-heading">
+                    <div>
+                        <p class="calculator-card-label">SHUNTING YARD / STEP MODE</p>
+                        <p class="postfix-subtitle">Binary operators: +, -, *, /</p>
+                    </div>
+                    <span class="postfix-expression-tag">INFIX → POSTFIX</span>
+                </div>
+
+                <form class="postfix-form" id="expression-form">
+                    <label class="calculator-field" for="expression-input">
+                        <span>INFIX EXPRESSION</span>
+                        <input class="linklist-input" id="expression-input" name="expression" type="text" value="A + B * ( C - D )" maxlength="120" autocomplete="off" spellcheck="false" aria-describedby="expression-hint">
+                    </label>
+                    <div class="postfix-form-footer">
+                        <p class="postfix-hint" id="expression-hint">Use numbers or variable names, +, -, *, /, and parentheses.</p>
+                        <button class="calculator-button postfix-start-button" type="submit">Start walkthrough <span aria-hidden="true">→</span></button>
+                    </div>
+                </form>
+
+                <p class="postfix-error" id="expression-error" role="alert" hidden></p>
+
+                <div class="postfix-progress">
+                    <span class="postfix-step-count" id="step-count">READY</span>
+                    <span class="postfix-progress-track" aria-hidden="true"><span id="progress-fill"></span></span>
+                    <span class="postfix-current-token" id="current-token">—</span>
+                </div>
+
+                <p class="postfix-explanation" id="step-explanation" aria-live="polite">Start the walkthrough to initialize the operator stack and output.</p>
+
+                <div class="postfix-machines">
+                    <section class="postfix-machine" aria-labelledby="ops-title">
+                        <div class="postfix-machine-heading">
+                            <h2 id="ops-title">Operator stack</h2>
+                            <span>TOP ↑</span>
+                        </div>
+                        <div class="postfix-stack-viewport">
+                            <div class="postfix-stack" id="ops-stack" role="list" aria-label="Operators, top first"></div>
+                        </div>
+                    </section>
+                    <section class="postfix-machine" aria-labelledby="output-title">
+                        <div class="postfix-machine-heading">
+                            <h2 id="output-title">Output</h2>
+                            <span>LEFT → RIGHT</span>
+                        </div>
+                        <div class="postfix-output" id="output-list" role="list" aria-label="Postfix output tokens"></div>
+                    </section>
+                </div>
+
+                <div class="postfix-controls">
+                    <button class="linklist-secondary-button" type="button" id="previous-step" disabled>← Previous</button>
+                    <button class="calculator-button postfix-next-button" type="button" id="next-step" disabled>Next step →</button>
+                    <button class="linklist-text-button" type="button" id="restart-button" disabled>Restart</button>
+                </div>
+                <p class="postfix-result" id="final-result" aria-live="polite" hidden></p>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <a class="footer-wordmark" href="/">Ronald's Website</a>
+        <p>Built while learning, one project at a time.</p>
+        <a href="/contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </footer>
+
+    <script>
+        const expressionForm = document.getElementById('expression-form');
+        const expressionInput = document.getElementById('expression-input');
+        const expressionError = document.getElementById('expression-error');
+        const opsStack = document.getElementById('ops-stack');
+        const outputList = document.getElementById('output-list');
+        const stepCount = document.getElementById('step-count');
+        const currentToken = document.getElementById('current-token');
+        const progressFill = document.getElementById('progress-fill');
+        const stepExplanation = document.getElementById('step-explanation');
+        const finalResult = document.getElementById('final-result');
+        const previousButton = document.getElementById('previous-step');
+        const nextButton = document.getElementById('next-step');
+        const restartButton = document.getElementById('restart-button');
+
+        const precedence = { '+': 1, '-': 1, '*': 2, '/': 2 };
+        let walkthrough = [];
+        let stepIndex = -1;
+
+        function tokenize(expression) {
+            expression = expression.trim().replace(/−/g, '-');
+            const tokens = [];
+            const tokenPattern = /\s*([A-Za-z_][A-Za-z_0-9]*|\d+(?:\.\d+)?|[()+\-*/])\s*/gy;
+            let position = 0;
+
+            while (position < expression.length) {
+                tokenPattern.lastIndex = position;
+                const match = tokenPattern.exec(expression);
+                if (!match) {
+                    throw new Error(`Unexpected character "${expression[position]}" at position ${position + 1}.`);
+                }
+                tokens.push(match[1]);
+                position = tokenPattern.lastIndex;
+            }
+
+            if (tokens.length === 0) {
+                throw new Error('Enter an infix expression to convert.');
+            }
+            return tokens;
+        }
+
+        function buildWalkthrough(tokens) {
+            const steps = [];
+            const ops = [];
+            const output = [];
+            let depth = 0;
+            let expectsOperand = true;
+
+            function record(token, explanation, kind = '') {
+                steps.push({
+                    token,
+                    explanation,
+                    kind,
+                    ops: [...ops].reverse(),
+                    output: [...output]
+                });
+            }
+
+            record('INIT', 'Initialize an empty operator stack and an empty output. Scan the tokens from left to right.');
+
+            for (const token of tokens) {
+                if (/^[A-Za-z_]/.test(token) || /^\d/.test(token)) {
+                    if (!expectsOperand) {
+                        throw new Error(`Missing operator before "${token}".`);
+                    }
+                    output.push(token);
+                    expectsOperand = false;
+                    record(token, `“${token}” is an operand, so send it directly to the output.`, 'output');
+                    continue;
+                }
+
+                if (token === '(') {
+                    if (!expectsOperand) {
+                        throw new Error('Missing operator before "(".');
+                    }
+                    ops.push(token);
+                    depth += 1;
+                    record(token, 'Push the opening bracket onto the operator stack. It marks where this group begins.', 'push');
+                    continue;
+                }
+
+                if (token === ')') {
+                    if (expectsOperand || depth === 0) {
+                        throw new Error('This closing bracket has no matching, complete opening group.');
+                    }
+                    while (ops.at(-1) !== '(') {
+                        const operator = ops.pop();
+                        output.push(operator);
+                        record(token, `Pop “${operator}” from the operator stack to the output while closing this group.`, 'pop');
+                    }
+                    ops.pop();
+                    depth -= 1;
+                    expectsOperand = false;
+                    record(token, 'Discard the matching opening bracket; brackets control order but never appear in postfix output.', 'discard');
+                    continue;
+                }
+
+                if (Object.hasOwn(precedence, token)) {
+                    if (expectsOperand) {
+                        throw new Error(`Operator "${token}" needs a left operand.`);
+                    }
+                    while (ops.length && Object.hasOwn(precedence, ops.at(-1)) && precedence[ops.at(-1)] >= precedence[token]) {
+                        const operator = ops.pop();
+                        output.push(operator);
+                        record(token, `“${operator}” has greater or equal precedence than “${token}”, so pop it to output first.`, 'pop');
+                    }
+                    ops.push(token);
+                    expectsOperand = true;
+                    record(token, `Push “${token}” onto the operator stack. It stays there until an operator of lower precedence or the end is reached.`, 'push');
+                }
+            }
+
+            if (expectsOperand) {
+                throw new Error('The expression ends where an operand is required.');
+            }
+            if (depth !== 0) {
+                throw new Error('There is an opening bracket without a matching closing bracket.');
+            }
+
+            while (ops.length) {
+                const operator = ops.pop();
+                output.push(operator);
+                record('END', `The expression is complete, so pop remaining operator “${operator}” to the output.`, 'pop');
+            }
+
+            record('DONE', 'All operators have been moved to output. Reading the output from left to right gives the postfix expression.', 'done');
+            return steps;
+        }
+
+        function renderStep() {
+            if (stepIndex < 0) return;
+            const step = walkthrough[stepIndex];
+
+            opsStack.replaceChildren();
+            if (step.ops.length === 0) {
+                const empty = document.createElement('span');
+                empty.className = 'postfix-empty';
+                empty.textContent = 'empty';
+                opsStack.append(empty);
+            } else {
+                step.ops.forEach((operator, index) => {
+                    const chip = document.createElement('span');
+                    chip.className = `postfix-token${index === 0 ? ' is-top' : ''}`;
+                    chip.setAttribute('role', 'listitem');
+                    chip.textContent = operator;
+                    opsStack.append(chip);
+                });
+            }
+
+            outputList.replaceChildren();
+            if (step.output.length === 0) {
+                const empty = document.createElement('span');
+                empty.className = 'postfix-empty';
+                empty.textContent = 'empty';
+                outputList.append(empty);
+            } else {
+                step.output.forEach((value, index) => {
+                    const isNewToken = step.kind === 'output' && index === step.output.length - 1;
+                    const chip = document.createElement('span');
+                    chip.className = `postfix-token${isNewToken ? ' is-new' : ''}`;
+                    chip.setAttribute('role', 'listitem');
+                    chip.textContent = value;
+                    outputList.append(chip);
+                });
+            }
+
+            stepCount.textContent = `STEP ${stepIndex + 1} / ${walkthrough.length}`;
+            currentToken.textContent = step.token;
+            stepExplanation.textContent = step.explanation;
+            progressFill.style.width = `${((stepIndex + 1) / walkthrough.length) * 100}%`;
+            previousButton.disabled = stepIndex === 0;
+            nextButton.disabled = stepIndex === walkthrough.length - 1;
+            nextButton.textContent = stepIndex === walkthrough.length - 1 ? 'Complete' : 'Next step →';
+            restartButton.disabled = stepIndex === 0;
+            finalResult.hidden = step.kind !== 'done';
+            if (step.kind === 'done') {
+                finalResult.replaceChildren();
+                const label = document.createElement('span');
+                label.textContent = 'POSTFIX RESULT';
+                const value = document.createElement('strong');
+                value.textContent = step.output.join(' ');
+                finalResult.append(label, value);
+            }
+        }
+
+        expressionForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            expressionError.hidden = true;
+            finalResult.hidden = true;
+
+            try {
+                const tokens = tokenize(expressionInput.value);
+                walkthrough = buildWalkthrough(tokens);
+                stepIndex = 0;
+                renderStep();
+            } catch (error) {
+                walkthrough = [];
+                stepIndex = -1;
+                expressionError.textContent = error.message;
+                expressionError.hidden = false;
+                opsStack.replaceChildren();
+                outputList.replaceChildren();
+                stepCount.textContent = 'INVALID';
+                currentToken.textContent = '—';
+                progressFill.style.width = '0';
+                stepExplanation.textContent = 'Fix the expression and start again.';
+                nextButton.textContent = 'Next step →';
+                finalResult.hidden = true;
+                nextButton.disabled = true;
+                previousButton.disabled = true;
+                restartButton.disabled = true;
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (stepIndex < walkthrough.length - 1) {
+                stepIndex += 1;
+                renderStep();
+            }
+        });
+
+        previousButton.addEventListener('click', () => {
+            if (stepIndex > 0) {
+                stepIndex -= 1;
+                renderStep();
+            }
+        });
+
+        restartButton.addEventListener('click', () => {
+            if (walkthrough.length) {
+                stepIndex = 0;
+                renderStep();
+            }
+        });
+    </script>
+</body>
+</html>

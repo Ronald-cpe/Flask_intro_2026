@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore a singly linked list by adding and removing nodes.">
+    <meta name="description" content="Explore a singly linked list by inserting, searching, and removing nodes.">
     <title>Linked List Visualizer | Ronald's Website</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
             <section class="calculator-intro" aria-labelledby="linklist-title">
                 <p class="eyebrow"><span class="status-dot"></span> BSCpE / DATA STRUCTURE 04</p>
                 <h1 id="linklist-title">Linked<br><em>list.</em></h1>
-                <p>Each node stores a value and a pointer to the next node. Try the controls to see how the chain changes.</p>
+                <p>Each node stores a value and a pointer to the next node. Add, insert, search, and remove nodes to explore how the chain changes.</p>
                 <div class="formula-display linklist-legend" aria-label="Each node points to the next node">
                     <span>NODE</span><span class="linklist-legend-arrow">→</span><span>NEXT</span>
                 </div>
@@ -56,9 +56,24 @@
                         <button class="calculator-button" type="submit" data-operation="append">Add to tail <span aria-hidden="true">＋</span></button>
                         <button class="linklist-secondary-button" type="button" id="prepend-button">Add to head <span aria-hidden="true">↑</span></button>
                     </div>
+                    <div class="linklist-insert-controls">
+                        <label class="calculator-field" for="insert-index">
+                            <span>INSERT AT INDEX (ZERO-BASED)</span>
+                            <input class="linklist-input" id="insert-index" name="index" type="number" min="0" step="1" placeholder="e.g. 1">
+                        </label>
+                        <button class="linklist-secondary-button" type="button" id="insert-button">Insert at index <span aria-hidden="true">↳</span></button>
+                    </div>
+                </form>
+                <form class="linklist-search-form" id="search-form" role="search">
+                    <label class="calculator-field" for="search-value">
+                        <span>SEARCH FOR VALUE</span>
+                        <input class="linklist-input" id="search-value" name="search" type="text" maxlength="16" placeholder="e.g. 24" autocomplete="off">
+                    </label>
+                    <button class="linklist-secondary-button" type="submit">Search list <span aria-hidden="true">⌕</span></button>
                 </form>
                 <div class="linklist-footer-actions">
                     <button class="linklist-text-button" type="button" id="remove-button">Remove head <span aria-hidden="true">−</span></button>
+                    <button class="linklist-text-button" type="button" id="remove-tail-button">Remove tail <span aria-hidden="true">−</span></button>
                     <button class="linklist-text-button" type="button" id="clear-button">Clear list <span aria-hidden="true">×</span></button>
                 </div>
             </section>
@@ -79,15 +94,21 @@
         const nodeForm = document.getElementById('node-form');
         const nodeInput = document.getElementById('node-value');
         const removeButton = document.getElementById('remove-button');
+        const removeTailButton = document.getElementById('remove-tail-button');
         const clearButton = document.getElementById('clear-button');
         const prependButton = document.getElementById('prepend-button');
+        const insertIndexInput = document.getElementById('insert-index');
+        const insertButton = document.getElementById('insert-button');
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-value');
+        let highlightedIndex = -1;
 
         function renderList() {
             listVisual.replaceChildren();
 
             nodes.forEach((value, index) => {
                 const node = document.createElement('div');
-                node.className = 'linklist-node';
+                node.className = `linklist-node${index === highlightedIndex ? ' is-search-match' : ''}`;
                 node.setAttribute('role', 'listitem');
 
                 const valueCell = document.createElement('span');
@@ -119,20 +140,27 @@
 
             nodeCount.textContent = `${nodes.length} ${nodes.length === 1 ? 'NODE' : 'NODES'}`;
             removeButton.disabled = nodes.length === 0;
+            removeTailButton.disabled = nodes.length === 0;
             clearButton.disabled = nodes.length === 0;
+        }
+
+        function getNodeValue() {
+            const value = nodeInput.value.trim();
+            if (!value) {
+                listStatus.textContent = 'Enter a value before adding a node.';
+                nodeInput.focus();
+                return null;
+            }
+            return value;
         }
 
         nodeForm.addEventListener('submit', (event) => {
             event.preventDefault();
-            const value = nodeInput.value.trim();
-
-            if (!value) {
-                listStatus.textContent = 'Enter a value before adding a node.';
-                nodeInput.focus();
-                return;
-            }
+            const value = getNodeValue();
+            if (value === null) return;
 
             nodes.push(value);
+            highlightedIndex = -1;
             renderList();
             listStatus.textContent = `Added ${value} to the tail of the list.`;
             nodeInput.value = '';
@@ -140,31 +168,77 @@
         });
 
         prependButton.addEventListener('click', () => {
-            const value = nodeInput.value.trim();
-
-            if (!value) {
-                listStatus.textContent = 'Enter a value before adding a node.';
-                nodeInput.focus();
-                return;
-            }
+            const value = getNodeValue();
+            if (value === null) return;
 
             nodes.unshift(value);
+            highlightedIndex = -1;
             renderList();
             listStatus.textContent = `Added ${value} to the head of the list.`;
             nodeInput.value = '';
             nodeInput.focus();
         });
 
+        insertButton.addEventListener('click', () => {
+            const value = getNodeValue();
+            if (value === null) return;
+
+            const rawIndex = insertIndexInput.value.trim();
+            const index = Number(rawIndex);
+            if (rawIndex === '' || !Number.isInteger(index) || index < 0 || index > nodes.length) {
+                listStatus.textContent = `Enter a whole-number index from 0 to ${nodes.length}.`;
+                insertIndexInput.focus();
+                return;
+            }
+
+            nodes.splice(index, 0, value);
+            highlightedIndex = -1;
+            renderList();
+            listStatus.textContent = `Inserted ${value} at index ${index}.`;
+            nodeInput.value = '';
+            insertIndexInput.value = '';
+            nodeInput.focus();
+        });
+
+        searchForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const value = searchInput.value.trim();
+            if (!value) {
+                listStatus.textContent = 'Enter a value to search for.';
+                searchInput.focus();
+                return;
+            }
+
+            highlightedIndex = nodes.indexOf(value);
+            renderList();
+            if (highlightedIndex === -1) {
+                listStatus.textContent = `${value} was not found in the list.`;
+            } else {
+                listStatus.textContent = `Found ${value} at index ${highlightedIndex}.`;
+            }
+        });
+
         removeButton.addEventListener('click', () => {
             if (nodes.length === 0) return;
 
             const removed = nodes.shift();
+            highlightedIndex = -1;
             renderList();
             listStatus.textContent = `Removed ${removed} from the head of the list.`;
         });
 
+        removeTailButton.addEventListener('click', () => {
+            if (nodes.length === 0) return;
+
+            const removed = nodes.pop();
+            highlightedIndex = -1;
+            renderList();
+            listStatus.textContent = `Removed ${removed} from the tail of the list.`;
+        });
+
         clearButton.addEventListener('click', () => {
             nodes.length = 0;
+            highlightedIndex = -1;
             renderList();
             listStatus.textContent = 'Cleared the list.';
         });

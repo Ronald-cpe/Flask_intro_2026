@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore a stack and see how last in, first out works.">
+    <title>Stack Visualizer | Ronald's Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-label="Ronald's Website">Ronald's Website</a>
+        <nav aria-label="Main navigation">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link active" href="/works" aria-current="page">Works</a>
+            <a class="nav-contact" href="/contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="calculator-main linklist-main">
+        <div class="linklist-layout">
+            <section class="calculator-intro" aria-labelledby="stack-title">
+                <p class="eyebrow"><span class="status-dot"></span> BSCpE / DATA STRUCTURE 05</p>
+                <h1 id="stack-title">Stack<br></h1>
+                <p>A stack follows LIFO: the last value pushed onto it is the first one popped off. Add values, then watch the top change.</p>
+                <div class="formula-display linklist-legend" aria-label="Last in, first out">
+                    <span>LIFO</span><span class="stack-legend-arrow">↕</span><span>LAST IN, FIRST OUT</span>
+                </div>
+                <a class="linklist-back-link" href="{{ url_for('works') }}">← Back to all works</a>
+            </section>
+
+            <section class="linklist-card" aria-label="Stack visualizer">
+                <div class="linklist-card-heading">
+                    <div>
+                        <p class="calculator-card-label">STACK / LIFO</p>
+                        <p class="linklist-count" id="stack-count">3 ITEMS</p>
+                    </div>
+                    <span class="linklist-head-tag">TOP ↓</span>
+                </div>
+
+                <div class="stack-viewport">
+                    <div class="stack-items" id="stack-visual" role="list" aria-label="Stack items"></div>
+                </div>
+                <p class="linklist-status" id="stack-status" aria-live="polite">Ready. Push adds to the top; pop removes from the top.</p>
+
+                <form class="linklist-form" id="stack-form">
+                    <label class="calculator-field" for="stack-value">
+                        <span>VALUE TO PUSH</span>
+                        <input class="linklist-input" id="stack-value" name="value" type="text" maxlength="16" placeholder="e.g. 42" autocomplete="off">
+                    </label>
+                    <div class="linklist-actions">
+                        <button class="calculator-button" type="submit">Push to top <span aria-hidden="true">↑</span></button>
+                        <button class="linklist-secondary-button" type="button" id="pop-button">Pop from top <span aria-hidden="true">↓</span></button>
+                    </div>
+                </form>
+                <div class="linklist-footer-actions">
+                    <button class="linklist-text-button" type="button" id="clear-stack-button">Clear stack <span aria-hidden="true">×</span></button>
+                    <span class="stack-complexity">PUSH / POP: O(1)</span>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <a class="footer-wordmark" href="/">Ronald's Website</a>
+        <p>Built while learning, one project at a time.</p>
+        <a href="/contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </footer>
+
+    <script>
+        const stackItems = ['12', '24', '36'];
+        const stackVisual = document.getElementById('stack-visual');
+        const stackCount = document.getElementById('stack-count');
+        const stackStatus = document.getElementById('stack-status');
+        const stackForm = document.getElementById('stack-form');
+        const stackInput = document.getElementById('stack-value');
+        const popButton = document.getElementById('pop-button');
+        const clearStackButton = document.getElementById('clear-stack-button');
+
+        function renderStack() {
+            stackVisual.replaceChildren();
+
+            if (stackItems.length === 0) {
+                const emptyState = document.createElement('p');
+                emptyState.className = 'linklist-empty';
+                emptyState.textContent = 'Your stack is empty. Push a value to add the first item.';
+                stackVisual.append(emptyState);
+            } else {
+                [...stackItems].reverse().forEach((value, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'stack-item';
+                    item.setAttribute('role', 'listitem');
+
+                    const label = document.createElement('span');
+                    label.className = 'stack-item-label';
+                    label.textContent = index === 0 ? 'TOP' : `ITEM ${stackItems.length - index}`;
+
+                    const itemValue = document.createElement('span');
+                    itemValue.className = 'stack-item-value';
+                    itemValue.textContent = value;
+
+                    item.append(label, itemValue);
+                    stackVisual.append(item);
+                });
+            }
+
+            stackCount.textContent = `${stackItems.length} ${stackItems.length === 1 ? 'ITEM' : 'ITEMS'}`;
+            popButton.disabled = stackItems.length === 0;
+            clearStackButton.disabled = stackItems.length === 0;
+        }
+
+        stackForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const value = stackInput.value.trim();
+
+            if (!value) {
+                stackStatus.textContent = 'Enter a value before pushing it onto the stack.';
+                stackInput.focus();
+                return;
+            }
+
+            stackItems.push(value);
+            renderStack();
+            stackStatus.textContent = `Pushed ${value} onto the top of the stack.`;
+            stackInput.value = '';
+            stackInput.focus();
+        });
+
+        popButton.addEventListener('click', () => {
+            if (stackItems.length === 0) return;
+
+            const removed = stackItems.pop();
+            renderStack();
+            stackStatus.textContent = `Popped ${removed} from the top of the stack.`;
+        });
+
+        clearStackButton.addEventListener('click', () => {
+            stackItems.length = 0;
+            renderStack();
+            stackStatus.textContent = 'Cleared the stack.';
+        });
+
+        renderStack();
+    </script>
+</body>
+</html>
