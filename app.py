@@ -16,6 +16,10 @@ def profile():
 def works():
     return render_template('works.html')
 
+@app.route('/works/linklist')
+def linklist():
+    return render_template('linklist.html')
+
 @app.route('/works/uppercase', methods=['GET', 'POST'])
 def uppercase():
     result = None

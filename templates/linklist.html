@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore a singly linked list by adding and removing nodes.">
+    <title>Linked List Visualizer | Ronald's Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-label="Ronald's Website">Ronald's Website</a>
+        <nav aria-label="Main navigation">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link active" href="/works" aria-current="page">Works</a>
+            <a class="nav-contact" href="/contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="calculator-main linklist-main">
+        <div class="linklist-layout">
+            <section class="calculator-intro" aria-labelledby="linklist-title">
+                <p class="eyebrow"><span class="status-dot"></span> BSCpE / DATA STRUCTURE 04</p>
+                <h1 id="linklist-title">Linked<br><em>list.</em></h1>
+                <p>Each node stores a value and a pointer to the next node. Try the controls to see how the chain changes.</p>
+                <div class="formula-display linklist-legend" aria-label="Each node points to the next node">
+                    <span>NODE</span><span class="linklist-legend-arrow">→</span><span>NEXT</span>
+                </div>
+                <a class="linklist-back-link" href="{{ url_for('works') }}">← Back to all works</a>
+            </section>
+
+            <section class="linklist-card" aria-label="Linked list visualizer">
+                <div class="linklist-card-heading">
+                    <div>
+                        <p class="calculator-card-label">SINGLY LINKED LIST</p>
+                        <p class="linklist-count" id="node-count">3 NODES</p>
+                    </div>
+                    <span class="linklist-head-tag">HEAD →</span>
+                </div>
+
+                <div class="linklist-viewport">
+                    <div class="linklist-chain" id="list-visual" role="list" aria-label="Linked list nodes"></div>
+                </div>
+                <p class="linklist-status" id="list-status" aria-live="polite">Ready. Add or remove a node to get started.</p>
+
+                <form class="linklist-form" id="node-form">
+                    <label class="calculator-field" for="node-value">
+                        <span>NODE VALUE</span>
+                        <input class="linklist-input" id="node-value" name="value" type="text" maxlength="16" placeholder="e.g. 42" autocomplete="off">
+                    </label>
+                    <div class="linklist-actions">
+                        <button class="calculator-button" type="submit" data-operation="append">Add to tail <span aria-hidden="true">＋</span></button>
+                        <button class="linklist-secondary-button" type="button" id="prepend-button">Add to head <span aria-hidden="true">↑</span></button>
+                    </div>
+                </form>
+                <div class="linklist-footer-actions">
+                    <button class="linklist-text-button" type="button" id="remove-button">Remove head <span aria-hidden="true">−</span></button>
+                    <button class="linklist-text-button" type="button" id="clear-button">Clear list <span aria-hidden="true">×</span></button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <a class="footer-wordmark" href="/">Ronald's Website</a>
+        <p>Built while learning, one project at a time.</p>
+        <a href="/contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </footer>
+
+    <script>
+        const nodes = ['12', '24', '36'];
+        const listVisual = document.getElementById('list-visual');
+        const nodeCount = document.getElementById('node-count');
+        const listStatus = document.getElementById('list-status');
+        const nodeForm = document.getElementById('node-form');
+        const nodeInput = document.getElementById('node-value');
+        const removeButton = document.getElementById('remove-button');
+        const clearButton = document.getElementById('clear-button');
+        const prependButton = document.getElementById('prepend-button');
+
+        function renderList() {
+            listVisual.replaceChildren();
+
+            nodes.forEach((value, index) => {
+                const node = document.createElement('div');
+                node.className = 'linklist-node';
+                node.setAttribute('role', 'listitem');
+
+                const valueCell = document.createElement('span');
+                valueCell.className = 'linklist-node-value';
+                valueCell.textContent = value;
+
+                const pointerCell = document.createElement('span');
+                pointerCell.className = 'linklist-node-pointer';
+                pointerCell.textContent = index === nodes.length - 1 ? 'NULL' : 'NEXT';
+
+                node.append(valueCell, pointerCell);
+                listVisual.append(node);
+
+                if (index < nodes.length - 1) {
+                    const arrow = document.createElement('span');
+                    arrow.className = 'linklist-arrow';
+                    arrow.setAttribute('aria-hidden', 'true');
+                    arrow.textContent = '→';
+                    listVisual.append(arrow);
+                }
+            });
+
+            if (nodes.length === 0) {
+                const emptyState = document.createElement('p');
+                emptyState.className = 'linklist-empty';
+                emptyState.textContent = 'Your list is empty. Add a value to create the head node.';
+                listVisual.append(emptyState);
+            }
+
+            nodeCount.textContent = `${nodes.length} ${nodes.length === 1 ? 'NODE' : 'NODES'}`;
+            removeButton.disabled = nodes.length === 0;
+            clearButton.disabled = nodes.length === 0;
+        }
+
+        nodeForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const value = nodeInput.value.trim();
+
+            if (!value) {
+                listStatus.textContent = 'Enter a value before adding a node.';
+                nodeInput.focus();
+                return;
+            }
+
+            nodes.push(value);
+            renderList();
+            listStatus.textContent = `Added ${value} to the tail of the list.`;
+            nodeInput.value = '';
+            nodeInput.focus();
+        });
+
+        prependButton.addEventListener('click', () => {
+            const value = nodeInput.value.trim();
+
+            if (!value) {
+                listStatus.textContent = 'Enter a value before adding a node.';
+                nodeInput.focus();
+                return;
+            }
+
+            nodes.unshift(value);
+            renderList();
+            listStatus.textContent = `Added ${value} to the head of the list.`;
+            nodeInput.value = '';
+            nodeInput.focus();
+        });
+
+        removeButton.addEventListener('click', () => {
+            if (nodes.length === 0) return;
+
+            const removed = nodes.shift();
+            renderList();
+            listStatus.textContent = `Removed ${removed} from the head of the list.`;
+        });
+
+        clearButton.addEventListener('click', () => {
+            nodes.length = 0;
+            renderList();
+            listStatus.textContent = 'Cleared the list.';
+        });
+
+        renderList();
+    </script>
+</body>
+</html>

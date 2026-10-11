@@ -413,6 +413,10 @@ a {
     background: linear-gradient(135deg, #17201f, #10282b);
 }
 
+.project-linklist .project-art {
+    background: linear-gradient(135deg, #102027, #132b30);
+}
+
 .project-art::before {
     position: absolute;
     inset: 0;
@@ -429,7 +433,8 @@ a {
 
 .works-main .uppercase-art,
 .works-main .circle-art,
-.works-main .triangle-art {
+.works-main .triangle-art,
+.works-main .linklist-art {
     transition: transform .24s ease;
 }
 
@@ -444,7 +449,9 @@ a {
 .works-main .project-item:hover .circle-art,
 .works-main .project-item:focus-visible .circle-art,
 .works-main .project-item:hover .triangle-art,
-.works-main .project-item:focus-visible .triangle-art {
+.works-main .project-item:focus-visible .triangle-art,
+.works-main .project-item:hover .linklist-art,
+.works-main .project-item:focus-visible .linklist-art {
     transform: translateY(-3px) scale(1.04);
 }
 
@@ -516,6 +523,29 @@ a {
     background: #102027;
     font-family: var(--mono);
     font-size: 11px;
+}
+
+.linklist-art {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    position: relative;
+    z-index: 1;
+    color: var(--coral);
+    font: 17px var(--mono);
+}
+
+.linklist-art > span {
+    min-width: 45px;
+    padding: 11px 7px;
+    border: 1px solid #3a7775;
+    background: #0e2227;
+    color: var(--forest);
+    text-align: center;
+}
+
+.linklist-art i {
+    font-style: normal;
 }
 
 .project-info {
@@ -902,6 +932,257 @@ a {
     font-weight: 400;
 }
 
+.linklist-main {
+    min-height: calc(100vh - 156px);
+}
+
+.linklist-layout {
+    width: min(100%, 1060px);
+    display: grid;
+    grid-template-columns: minmax(0, .8fr) minmax(440px, 1.2fr);
+    align-items: center;
+    gap: 54px;
+}
+
+.linklist-legend {
+    gap: 10px;
+    color: #9fb4b7;
+    font-size: 11px;
+    letter-spacing: .7px;
+}
+
+.linklist-legend-arrow {
+    color: var(--forest);
+    font-size: 20px;
+}
+
+.linklist-back-link {
+    display: inline-block;
+    margin-top: 34px;
+    color: #9aabad;
+    font-size: 12px;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.linklist-back-link:hover,
+.linklist-back-link:focus-visible {
+    color: var(--forest);
+}
+
+.linklist-card {
+    min-width: 0;
+    padding: 25px;
+    border: 1px solid #2b4147;
+    background: rgba(13, 23, 28, .94);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+}
+
+.linklist-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.linklist-card-heading .calculator-card-label {
+    margin: 0 0 7px;
+    padding: 0;
+    border: 0;
+}
+
+.linklist-count,
+.linklist-head-tag {
+    margin: 0;
+    color: var(--forest);
+    font: 10px var(--mono);
+    letter-spacing: .7px;
+}
+
+.linklist-head-tag {
+    color: #9aabad;
+}
+
+.linklist-viewport {
+    min-height: 174px;
+    display: flex;
+    align-items: center;
+    margin: 18px 0 0;
+    padding: 17px;
+    overflow-x: auto;
+    border: 1px solid #1e3439;
+    background: linear-gradient(135deg, rgba(8, 18, 22, .95), rgba(14, 31, 35, .88));
+    scrollbar-color: #35545a #0b1519;
+    scrollbar-width: thin;
+}
+
+.linklist-chain {
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.linklist-node {
+    width: 104px;
+    flex: 0 0 104px;
+    overflow: hidden;
+    border: 1px solid #3a7775;
+    background: #0e2227;
+    box-shadow: 0 0 18px rgba(85, 230, 210, .07);
+    animation: linklist-node-in .2s ease-out both;
+}
+
+.linklist-node-value {
+    min-height: 58px;
+    display: grid;
+    place-items: center;
+    padding: 8px;
+    overflow-wrap: anywhere;
+    color: var(--forest);
+    font: 600 18px var(--mono);
+}
+
+.linklist-node-pointer {
+    display: block;
+    padding: 7px 8px;
+    border-top: 1px solid #2b4147;
+    background: #111b20;
+    color: #8da1a5;
+    font: 9px var(--mono);
+    letter-spacing: .8px;
+    text-align: center;
+}
+
+.linklist-arrow {
+    flex: 0 0 auto;
+    color: var(--coral);
+    font-size: 21px;
+}
+
+.linklist-empty {
+    width: 100%;
+    margin: 0;
+    color: #8da1a5;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.linklist-status {
+    min-height: 34px;
+    margin: 12px 0 18px;
+    color: #9aabad;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.linklist-form {
+    display: grid;
+    gap: 15px;
+}
+
+.linklist-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 12px;
+    border: 1px solid #31464c;
+    outline: 0;
+    background: #091216;
+    color: var(--ink);
+    font: 14px var(--mono);
+}
+
+.linklist-input::placeholder {
+    color: #607277;
+}
+
+.linklist-input:focus {
+    border-color: var(--forest);
+    box-shadow: 0 0 0 2px rgba(85, 230, 210, .1);
+}
+
+.linklist-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.linklist-actions .calculator-button {
+    margin: 0;
+}
+
+.linklist-secondary-button,
+.linklist-text-button {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    border: 1px solid #355158;
+    background: #122126;
+    color: var(--ink);
+    font: 600 12px var(--sans);
+    cursor: pointer;
+    transition: border-color .2s ease, color .2s ease, background-color .2s ease;
+}
+
+.linklist-secondary-button:hover,
+.linklist-secondary-button:focus-visible {
+    border-color: var(--forest);
+    color: var(--forest);
+}
+
+.linklist-footer-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 15px;
+    border-top: 1px solid var(--line);
+}
+
+.linklist-text-button {
+    min-height: 34px;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #9aabad;
+    font-size: 11px;
+}
+
+.linklist-text-button:hover,
+.linklist-text-button:focus-visible {
+    color: var(--forest);
+}
+
+.linklist-text-button:disabled {
+    color: #506065;
+    cursor: not-allowed;
+}
+
+.linklist-secondary-button:focus-visible,
+.linklist-text-button:focus-visible,
+.linklist-input:focus-visible {
+    outline: 2px solid var(--forest);
+    outline-offset: 3px;
+}
+
+@keyframes linklist-node-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .text-result {
     max-height: 220px;
     margin: 0;
@@ -1204,6 +1485,11 @@ a {
         gap: 32px;
     }
 
+    .linklist-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
     .calculator-intro h1 {
         font-size: 46px;
     }
@@ -1268,8 +1554,11 @@ a {
     .works-main .uppercase-art,
     .works-main .circle-art,
     .works-main .triangle-art,
+    .works-main .linklist-art,
+    .linklist-node,
     .works-main .project-arrow {
         transition: none;
+        animation: none;
     }
 
     .works-main .project-item:hover,
@@ -1282,6 +1571,8 @@ a {
     .works-main .project-item:focus-visible .circle-art,
     .works-main .project-item:hover .triangle-art,
     .works-main .project-item:focus-visible .triangle-art,
+    .works-main .project-item:hover .linklist-art,
+    .works-main .project-item:focus-visible .linklist-art,
     .works-main .project-item:hover .project-arrow,
     .works-main .project-item:focus-visible .project-arrow {
         transform: none;
