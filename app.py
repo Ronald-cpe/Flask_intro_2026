@@ -24,6 +24,10 @@ def linklist():
 def stack():
     return render_template('stack.html')
 
+@app.route('/works/en-dequeue')
+def enqueue_dequeue():
+    return render_template('en_dequeue.html')
+
 @app.route('/works/infix-postfix')
 def infix_postfix():
     return render_template('in/postfix.html')

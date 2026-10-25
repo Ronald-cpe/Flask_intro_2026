@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore how enqueue and dequeue work in a first in, first out queue.">
+    <title>Enqueue / Dequeue | Ronald's Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="wordmark" href="/" aria-label="Ronald's Website">Ronald's Website</a>
+        <nav aria-label="Main navigation">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/profile">Profile</a>
+            <a class="nav-link active" href="/works" aria-current="page">Works</a>
+            <a class="nav-contact" href="/contact">Contact <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="calculator-main linklist-main">
+        <div class="linklist-layout">
+            <section class="calculator-intro" aria-labelledby="queue-title">
+                <p class="eyebrow"><span class="status-dot"></span> BSCpE / DATA STRUCTURE 07</p>
+                <h1 id="queue-title">Enqueue<br><em>/ dequeue.</em></h1>
+                <p>A queue follows FIFO: the first value enqueued is the first one dequeued. Add values at the rear and remove them from the front.</p>
+                <div class="formula-display linklist-legend" aria-label="First in, first out">
+                    <span>FIFO</span><span class="queue-legend-arrow">→</span><span>FIRST IN, FIRST OUT</span>
+                </div>
+                <a class="linklist-back-link" href="{{ url_for('works') }}">← Back to all works</a>
+            </section>
+
+            <section class="linklist-card" aria-label="Queue visualizer">
+                <div class="linklist-card-heading">
+                    <div>
+                        <p class="calculator-card-label">QUEUE / FIFO</p>
+                        <p class="linklist-count" id="queue-count">3 ITEMS</p>
+                    </div>
+                    <span class="linklist-head-tag">FRONT → REAR</span>
+                </div>
+
+                <div class="queue-viewport">
+                    <div class="queue-items" id="queue-visual" role="list" aria-label="Queue items, front to rear"></div>
+                </div>
+                <p class="linklist-status" id="queue-status" aria-live="polite">Ready. Enqueue adds at the rear; dequeue removes from the front.</p>
+
+                <form class="linklist-form" id="queue-form">
+                    <label class="calculator-field" for="queue-value">
+                        <span>VALUE TO ENQUEUE</span>
+                        <input class="linklist-input" id="queue-value" name="value" type="text" maxlength="16" placeholder="e.g. 42" autocomplete="off">
+                    </label>
+                    <div class="linklist-actions">
+                        <button class="calculator-button" type="submit">Enqueue at rear <span aria-hidden="true">→</span></button>
+                        <button class="linklist-secondary-button" type="button" id="dequeue-button">Dequeue from front <span aria-hidden="true">←</span></button>
+                    </div>
+                </form>
+                <div class="linklist-footer-actions">
+                    <button class="linklist-text-button" type="button" id="clear-queue-button">Clear queue <span aria-hidden="true">×</span></button>
+                    <span class="stack-complexity">ENQUEUE / DEQUEUE: O(1)</span>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <a class="footer-wordmark" href="/">Ronald's Website</a>
+        <p>Built while learning, one project at a time.</p>
+        <a href="/contact">Get in touch <span aria-hidden="true">↗</span></a>
+    </footer>
+
+    <script>
+        let queueFront = { value: '12', next: null };
+        queueFront.next = { value: '24', next: null };
+        queueFront.next.next = { value: '36', next: null };
+        let queueRear = queueFront.next.next;
+        let queueLength = 3;
+        const queueVisual = document.getElementById('queue-visual');
+        const queueCount = document.getElementById('queue-count');
+        const queueStatus = document.getElementById('queue-status');
+        const queueForm = document.getElementById('queue-form');
+        const queueInput = document.getElementById('queue-value');
+        const dequeueButton = document.getElementById('dequeue-button');
+        const clearQueueButton = document.getElementById('clear-queue-button');
+
+        function renderQueue() {
+            queueVisual.replaceChildren();
+
+            if (queueLength === 0) {
+                const emptyState = document.createElement('p');
+                emptyState.className = 'linklist-empty';
+                emptyState.textContent = 'Your queue is empty. Enqueue a value to add the first item.';
+                queueVisual.append(emptyState);
+            } else {
+                let current = queueFront;
+                let index = 0;
+                while (current) {
+                    const item = document.createElement('div');
+                    item.className = 'queue-item';
+                    item.setAttribute('role', 'listitem');
+
+                    const label = document.createElement('span');
+                    label.className = 'queue-item-label';
+                    label.textContent = index === 0 ? 'FRONT' : index === queueLength - 1 ? 'REAR' : `ITEM ${index + 1}`;
+
+                    const itemValue = document.createElement('span');
+                    itemValue.className = 'queue-item-value';
+                    itemValue.textContent = current.value;
+
+                    item.append(label, itemValue);
+                    queueVisual.append(item);
+                    current = current.next;
+                    index += 1;
+                }
+            }
+
+            queueCount.textContent = `${queueLength} ${queueLength === 1 ? 'ITEM' : 'ITEMS'}`;
+            dequeueButton.disabled = queueLength === 0;
+            clearQueueButton.disabled = queueLength === 0;
+        }
+
+        queueForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const value = queueInput.value.trim();
+
+            if (!value) {
+                queueStatus.textContent = 'Enter a value before enqueueing it.';
+                queueInput.focus();
+                return;
+            }
+
+            const newNode = { value, next: null };
+            if (queueRear) {
+                queueRear.next = newNode;
+            } else {
+                queueFront = newNode;
+            }
+            queueRear = newNode;
+            queueLength += 1;
+            renderQueue();
+            queueStatus.textContent = `Enqueued ${value} at the rear of the queue.`;
+            queueInput.value = '';
+            queueInput.focus();
+        });
+
+        dequeueButton.addEventListener('click', () => {
+            if (!queueFront) return;
+
+            const removed = queueFront.value;
+            queueFront = queueFront.next;
+            queueLength -= 1;
+            if (!queueFront) queueRear = null;
+            renderQueue();
+            queueStatus.textContent = `Dequeued ${removed} from the front of the queue.`;
+        });
+
+        clearQueueButton.addEventListener('click', () => {
+            queueFront = null;
+            queueRear = null;
+            queueLength = 0;
+            renderQueue();
+            queueStatus.textContent = 'Cleared the queue.';
+        });
+
+        renderQueue();
+    </script>
+</body>
+</html>
